@@ -1,0 +1,124 @@
+{
+    user(id: 1) {
+        name
+        age
+        gender
+    }
+}
+
+//variables
+{
+  "userID": 1
+}
+
+query getSingleUser($userID: Int!) {
+    user(id: $userID) {
+        name
+        age
+        gender
+    }
+}
+
+{
+    userA: user(id: 2) {
+        name
+        age
+        gender
+    },
+    userB: user(id: 3) {
+        name
+        age
+        gender
+    }
+}
+
+//variables
+{ 
+    "userAID":2,
+    "userBID":3
+}
+
+query getUsersWithAliases($userAID: Int!, $userBID: Int!) {
+    userA: user(id: $userAID) {
+        name
+        age
+        gender
+    },
+    userB: user(id: $userBID) {
+        name
+        age
+        gender
+    }
+}
+
+//fragment
+fragment userFields on Person {
+  name
+  age
+  gender
+}
+
+{
+    userA: user(id: 2) {
+        ...userFields
+    },
+    userB: user(id: 3) {
+        ...userFields
+    }
+}
+
+query getUsersWithFragments($userAID: Int!, $userBID: Int!) {
+    userA: user(id: $userAID) {
+        ...userFields
+    },
+    userB: user(id: $userBID) {
+        ...userFields
+    }
+}
+
+//directive
+fragment userFields on Person {
+  name
+  age @skip(if: true)
+  id @include(if: true)
+}
+
+{
+  users(gender: "F"){
+    ...userFields
+  }
+}
+
+//variables
+{
+  "gender": "F",
+  "age": true,
+  "id": true
+}
+
+query getUsers($gender: String, $age: Boolean!, $id: Boolean!) {
+  users(gender: $gender){
+    ...userFields
+  }
+}
+
+//mutations
+mutation updateUser($id: Int!, $name: String!, $age: String) {
+  updateUser(id: $id, name:$name, age: $age){
+    ...userFields
+  }
+}
+
+fragment userFields on Person {
+  name
+  age
+  gender
+}
+
+//variables
+{
+  "id": 1,
+  "name": "B1e",
+  "age": "20"
+}
+
